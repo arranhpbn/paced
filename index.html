@@ -10,22 +10,24 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0D1117;
-  --bg2: #111827;
-  --bg3: #1A2030;
-  --teal: #1EB980;
-  --teal-dim: #164E3A;
-  --teal-faint: #0D2A1E;
-  --ink: #F0F0F0;
-  --ink2: #6B7A99;
-  --ink3: #3D4450;
-  --border: #1E2A3A;
-  --purple: #A78BFA;
-  --orange: #FB923C;
-  --blue: #60A5FA;
-  --red: #F87171;
+  --blue-primary: #3f63f2;
+  --blue-dim: #0A1230;
+  --blue-faint: #080E28;
+  --bg: #06070D;
+  --bg2: #0B0E1A;
+  --bg3: #0D1020;
+  --border: #1A2050;
+  --border2: #252A45;
+  --ink: #EEF0FF;
+  --ink2: #4A5A99;
+  --ink3: #252A45;
+  --green: #22c55e;
+  --red: #ef4444;
   --yellow: #FBBF24;
+  --orange: #FB923C;
+  --purple: #A78BFA;
   --pink: #F472B6;
+  --blue: #60A5FA;
 }
 
 html, body {
@@ -39,26 +41,81 @@ html, body {
 }
 
 h1, h2, h3, h4 { font-family: 'Cabinet Grotesk', sans-serif; }
-
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 button:active { transform: scale(0.97); }
 input, select, textarea { font-family: inherit; }
 
 .app {
-  max-width: 480px;
-  margin: 0 auto;
+  display: flex;
   height: 100%;
   position: relative;
   overflow: hidden;
 }
 
-/* Screen transitions */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 4px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  margin-bottom: 28px;
+}
+
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--blue-primary);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff;
+}
+
+.wordmark {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.sidebar-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink2);
+  transition: all 0.15s;
+  width: 100%;
+  text-align: left;
+}
+.sidebar-tab:hover { color: var(--ink); background: rgba(255,255,255,0.03); }
+.sidebar-tab.active { background: var(--blue-faint); color: var(--blue-primary); }
+.sidebar-tab i { font-size: 20px; }
+
+.main-area {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
 .screen {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 20px 100px;
+  padding: 0 40px 60px;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, opacity;
 }
@@ -66,7 +123,6 @@ input, select, textarea { font-family: inherit; }
 .screen.hidden-left { transform: translateX(-100%); opacity: 0; pointer-events: none; }
 .screen.active { transform: translateX(0); opacity: 1; pointer-events: auto; }
 
-/* Top bar */
 .topbar {
   display: flex;
   align-items: center;
@@ -78,64 +134,28 @@ input, select, textarea { font-family: inherit; }
   z-index: 10;
 }
 .topbar-left { display: flex; align-items: center; gap: 10px; }
-.logo-icon {
-  width: 32px; height: 32px;
-  background: var(--teal);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; color: var(--bg);
-}
-.wordmark { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 20px; }
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-.topbar-btn {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink2);
-  font-size: 20px;
-  transition: color 0.15s;
-}
-.topbar-btn:hover { color: var(--ink); }
-.avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--teal-dim);
-  color: var(--teal);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
+
+@media (min-width: 769px) {
+  .topbar .topbar-left { display: none; }
 }
 
-/* Date and heading */
 .date-label { color: var(--ink2); font-size: 13px; margin-bottom: 4px; }
 .main-heading { font-size: 32px; font-weight: 800; margin-bottom: 16px; }
 
-/* Today summary card */
 .summary-card {
   background: var(--bg2);
-  border: 1px solid var(--teal-dim);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 20px;
 }
-.summary-top { display: flex; justify-content: space-between; margin-bottom: 14px; }
-.summary-stat-label { font-size: 12px; color: var(--ink2); margin-bottom: 2px; }
-.summary-stat-value { font-size: 22px; font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif; }
-.progress-bar {
-  display: flex; gap: 4px; height: 8px; border-radius: 4px; overflow: hidden;
-  margin-bottom: 8px;
-}
-.progress-seg {
-  flex: 1; border-radius: 4px;
-  background: var(--border);
-  transition: background 0.3s;
-}
-.progress-seg.done { background: var(--teal); }
-.summary-note { font-size: 12px; color: var(--ink2); }
+.summary-msg { font-size: 14px; color: var(--ink2); line-height: 1.5; }
+.summary-counts { display: flex; gap: 24px; margin-top: 12px; }
+.summary-count { display: flex; flex-direction: column; }
+.summary-count-val { font-size: 22px; font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif; }
+.summary-count-label { font-size: 12px; color: var(--ink2); }
 
-/* Filter pills */
-.filters { display: flex; gap: 8px; margin-bottom: 18px; }
+.filters { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
 .pill {
   padding: 7px 16px;
   border-radius: 20px;
@@ -146,12 +166,11 @@ input, select, textarea { font-family: inherit; }
   transition: all 0.15s;
 }
 .pill.active {
-  border-color: var(--teal);
-  color: var(--teal);
-  background: var(--teal-faint);
+  border-color: var(--blue-primary);
+  color: var(--blue-primary);
+  background: var(--blue-faint);
 }
 
-/* Task cards */
 .task-list { display: flex; flex-direction: column; gap: 10px; }
 
 .task-card {
@@ -163,47 +182,54 @@ input, select, textarea { font-family: inherit; }
   transition: border-color 0.15s;
   animation: slideUp 0.3s ease-out;
 }
-.task-card:hover { border-color: var(--ink3); }
-.task-card.complete { opacity: 0.5; }
+.task-card:hover { border-color: var(--border2); }
+.task-card.done-card {
+  opacity: 0.35;
+  pointer-events: none;
+}
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes pulseGreen {
-  0% { box-shadow: 0 0 0 0 rgba(30,185,128,0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(30,185,128,0); }
-  100% { box-shadow: 0 0 0 0 rgba(30,185,128,0); }
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
 }
 
 .task-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .subject-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink2); }
-.subject-dot { width: 8px; height: 8px; border-radius: 50%; }
-.status-badge {
-  font-size: 11px; font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 10px;
-}
-.status-today { background: var(--teal-faint); color: var(--teal); }
+.subject-emoji { font-size: 14px; }
+
+.status-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 10px; }
+.status-today { background: rgba(63,99,242,0.12); color: var(--blue-primary); }
+.status-today-overdue { background: rgba(239,68,68,0.12); color: var(--red); }
+.status-pastdue { background: rgba(224,123,84,0.12); color: #E07B54; }
 .status-start { background: rgba(251,191,36,0.12); color: var(--yellow); }
 .status-ontrack { background: rgba(96,165,250,0.12); color: var(--blue); }
-.status-done { background: rgba(30,185,128,0.12); color: var(--teal); }
-.status-overdue { background: rgba(248,113,113,0.12); color: var(--red); }
+.status-done { background: rgba(34,197,94,0.12); color: var(--green); }
 
 .task-title {
   font-family: 'Cabinet Grotesk', sans-serif;
   font-weight: 500;
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
+
+.task-dates { display: flex; gap: 24px; margin-bottom: 12px; }
+.task-date-group { display: flex; flex-direction: column; }
+.task-date-label { font-size: 10px; color: var(--ink2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.task-date-value { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 18px; }
+.task-date-value.start { color: var(--blue-primary); }
+.task-date-value.due { color: var(--ink3); font-size: 14px; font-weight: 500; }
 
 .task-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--ink2); }
 .meta-item i { font-size: 14px; }
 .difficulty-dots { display: flex; gap: 3px; }
 .diff-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink3); }
-.diff-dot.filled { background: var(--teal); }
+.diff-dot.filled { background: var(--blue-primary); }
 
 .task-chevron {
   float: right;
@@ -214,7 +240,6 @@ input, select, textarea { font-family: inherit; }
 }
 .task-card.expanded .task-chevron { transform: rotate(90deg); }
 
-/* Expanded content */
 .task-expand {
   max-height: 0;
   overflow: hidden;
@@ -224,42 +249,276 @@ input, select, textarea { font-family: inherit; }
 
 .expand-inner { padding-top: 14px; border-top: 1px solid var(--border); margin-top: 14px; }
 .task-desc { font-size: 13px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
-.mini-stats { display: flex; gap: 8px; margin-bottom: 14px; }
-.mini-stat {
-  flex: 1;
-  background: var(--bg3);
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-}
-.mini-stat-label { font-size: 10px; color: var(--ink2); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-.mini-stat-value { font-size: 15px; font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif; }
 
-.btn-complete {
-  width: 100%;
-  padding: 12px;
-  background: var(--teal);
-  color: var(--bg);
-  font-weight: 700;
-  font-size: 14px;
+.btn-row { display: flex; gap: 8px; }
+.btn-outline {
+  flex: 1; padding: 10px;
+  border: 1px solid var(--border);
   border-radius: 10px;
+  font-weight: 600; font-size: 13px;
+  color: var(--ink2);
+  transition: all 0.15s;
+}
+.btn-outline:hover { border-color: var(--blue-primary); color: var(--blue-primary); }
+.btn-outline.started { border-color: var(--green); color: var(--green); pointer-events: none; }
+.btn-outline.overdue-finished { border-color: var(--blue-primary); color: var(--blue-primary); }
+.btn-outline.overdue-notfinished { border-color: var(--ink3); color: var(--ink2); }
+.btn-fill {
+  flex: 1; padding: 10px;
+  background: var(--blue-primary);
+  border-radius: 10px;
+  font-weight: 700; font-size: 13px;
+  color: #fff;
   transition: background 0.15s;
 }
-.btn-complete:hover { background: #25d993; }
-.btn-complete:disabled { background: var(--ink3); cursor: default; }
-.btn-complete:disabled:active { transform: none; }
+.btn-fill:hover { background: #5577ff; }
+.btn-fill:disabled { background: var(--ink3); cursor: default; color: var(--ink2); }
+.btn-fill:disabled:active { transform: none; }
 
-/* Bottom nav */
+.previous-section { margin-top: 24px; }
+.previous-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px; cursor: pointer;
+  color: var(--ink2); font-size: 13px; font-weight: 500;
+}
+.previous-divider::before, .previous-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.previous-divider i { font-size: 14px; transition: transform 0.2s; }
+.previous-divider.open i { transform: rotate(180deg); }
+.previous-list { display: flex; flex-direction: column; gap: 6px; }
+.previous-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  opacity: 0.5; font-size: 13px;
+}
+.previous-row .subject-emoji { font-size: 12px; }
+.previous-row .prev-title { flex: 1; color: var(--ink2); }
+.previous-row .prev-date { color: var(--ink3); font-size: 11px; }
+
+/* Calendar */
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-nav { display: flex; align-items: center; gap: 12px; }
+.cal-nav-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink2); font-size: 18px;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.cal-nav-btn:hover { border-color: var(--blue-primary); color: var(--blue-primary); }
+.cal-range { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 20px; }
+.cal-subtitle { font-size: 13px; color: var(--ink2); margin-bottom: 16px; }
+
+.cal-legend { display: flex; gap: 16px; margin-bottom: 16px; font-size: 12px; color: var(--ink2); }
+.cal-legend-item { display: flex; align-items: center; gap: 6px; }
+.cal-swatch { width: 24px; height: 10px; border-radius: 5px; }
+.cal-swatch.start { border: 1.5px dashed var(--blue-primary); background: transparent; }
+.cal-swatch.due { background: var(--blue-primary); }
+
+.cal-scroll { overflow-x: auto; margin: 0 -10px; padding: 0 10px; }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(90px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 630px;
+}
+.cal-day {
+  background: var(--bg2);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+.cal-day-header {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.cal-day-name { font-size: 11px; color: var(--ink2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.cal-day-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600;
+  font-family: 'Cabinet Grotesk', sans-serif;
+}
+.cal-day-num.today { background: var(--blue-primary); color: #fff; }
+
+.cal-events { padding: 6px 4px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.cal-pill {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-pill.start-pill {
+  border: 1.5px dashed var(--blue-primary);
+  color: var(--blue-primary);
+  opacity: 0.7;
+  background: transparent;
+}
+.cal-pill.due-pill {
+  background: var(--blue-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.cal-summary {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.cal-summary h3 { font-size: 14px; margin-bottom: 10px; color: var(--ink2); }
+.cal-summary-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; }
+.cal-chip { padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
+.cal-chip.start-chip { border: 1.5px dashed var(--blue-primary); color: var(--blue-primary); }
+.cal-chip.due-chip { background: var(--blue-primary); color: #fff; }
+
+/* Progress */
+.streak-hero {
+  background: linear-gradient(135deg, #0A1230, #0D1840);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.streak-emoji { font-size: 48px; filter: drop-shadow(0 0 12px rgba(255,160,0,0.4)); margin-bottom: 8px; }
+.streak-number { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 800; font-size: 72px; line-height: 1; }
+.streak-unit { font-size: 16px; color: var(--ink2); margin-top: 4px; }
+.streak-sub { font-size: 13px; color: var(--ink2); margin-top: 8px; }
+.streak-best {
+  display: inline-block; margin-top: 10px;
+  padding: 4px 12px; border-radius: 8px;
+  background: rgba(251,191,36,0.12); color: var(--yellow);
+  font-size: 12px; font-weight: 500;
+}
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.stat-card-label { font-size: 12px; color: var(--ink2); margin-bottom: 6px; }
+.stat-card-value { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 24px; }
+.stat-delta {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 2px 6px; border-radius: 6px; margin-left: 6px;
+}
+.stat-delta.up { background: rgba(34,197,94,0.12); color: var(--green); }
+.stat-delta.down { background: rgba(239,68,68,0.12); color: var(--red); }
+
+.chart-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+.chart-title { font-size: 14px; color: var(--ink2); margin-bottom: 14px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.bar {
+  width: 100%; border-radius: 6px 6px 0 0;
+  background: var(--border);
+  transition: height 0.3s;
+}
+.bar.current { background: var(--blue-primary); box-shadow: 0 0 12px rgba(63,99,242,0.3); }
+.bar-label { font-size: 11px; color: var(--ink2); }
+
+.subject-breakdown { margin-bottom: 20px; }
+.subject-breakdown h3 { font-size: 14px; color: var(--ink2); margin-bottom: 12px; }
+.subj-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+.subj-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.subj-info { flex: 1; min-width: 0; }
+.subj-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.subj-bar-track { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.subj-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.subj-time { font-size: 12px; color: var(--ink2); white-space: nowrap; }
+
+/* Settings */
+.settings-group { margin-bottom: 24px; }
+.settings-group h3 { font-size: 14px; color: var(--ink2); margin-bottom: 12px; }
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.setting-label { font-size: 14px; }
+.setting-input {
+  width: 240px; padding: 8px 12px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--ink); font-size: 13px;
+  outline: none;
+}
+.setting-input:focus { border-color: var(--blue-primary); }
+
+.subject-list { display: flex; flex-direction: column; gap: 8px; }
+.subject-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.subject-item .subject-emoji { font-size: 18px; }
+.subject-item-name { flex: 1; font-size: 14px; }
+.subject-item-btn { color: var(--ink2); font-size: 16px; padding: 4px; }
+.subject-item-btn:hover { color: var(--ink); }
+.btn-add-subject {
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  color: var(--ink2);
+  font-size: 13px;
+  text-align: center;
+  transition: all 0.15s;
+}
+.btn-add-subject:hover { border-color: var(--blue-primary); color: var(--blue-primary); }
+
+.popover-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.popover-overlay.show { opacity: 1; pointer-events: auto; }
+.popover {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  width: 320px;
+}
+.popover h3 { font-size: 16px; margin-bottom: 16px; }
+.popover .form-group { margin-bottom: 14px; }
+.popover-btns { display: flex; gap: 8px; margin-top: 16px; }
+.popover-btns button { flex: 1; padding: 10px; border-radius: 10px; font-weight: 600; font-size: 13px; }
+.popover-cancel { background: var(--bg3); color: var(--ink2); }
+.popover-save { background: var(--blue-primary); color: #fff; }
+
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
+  bottom: 0; left: 0; right: 0;
   background: var(--bg2);
   border-top: 1px solid var(--border);
-  display: flex;
+  display: none;
   padding: 10px 0 max(10px, env(safe-area-inset-bottom));
   z-index: 100;
 }
@@ -272,29 +531,26 @@ input, select, textarea { font-family: inherit; }
   padding: 4px 0;
   transition: color 0.15s;
 }
-.nav-tab.active { color: var(--teal); }
+.nav-tab.active { color: var(--blue-primary); }
 .nav-tab i { font-size: 22px; }
 
-/* FAB */
 .fab {
   position: fixed;
-  bottom: max(74px, calc(60px + env(safe-area-inset-bottom)));
-  left: 50%;
-  transform: translateX(calc(-50% + 200px));
+  bottom: 32px;
+  right: 32px;
   width: 52px; height: 52px;
-  background: var(--teal);
+  background: var(--blue-primary);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 26px; color: var(--bg);
-  box-shadow: 0 4px 20px rgba(30,185,128,0.3);
+  font-size: 26px; color: #fff;
+  box-shadow: 0 4px 20px rgba(63,99,242,0.3);
   z-index: 101;
   transition: transform 0.15s, box-shadow 0.15s;
 }
-.fab:hover { box-shadow: 0 6px 28px rgba(30,185,128,0.45); }
-.fab:active { transform: translateX(calc(-50% + 200px)) scale(0.93); }
+.fab:hover { box-shadow: 0 6px 28px rgba(63,99,242,0.45); }
+.fab:active { transform: scale(0.93); }
 .fab.hide { display: none; }
 
-/* Add homework flow */
 .flow-topbar {
   display: flex; align-items: center; gap: 12px;
   padding: 16px 0;
@@ -302,87 +558,66 @@ input, select, textarea { font-family: inherit; }
 }
 .back-btn { font-size: 22px; color: var(--ink2); }
 .back-btn:hover { color: var(--ink); }
-
 .step-indicator { display: flex; align-items: center; gap: 8px; flex: 1; }
 .step-bar { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.25s; }
-.step-bar.done, .step-bar.active { background: var(--teal); }
+.step-bar.done, .step-bar.active { background: var(--blue-primary); }
 .step-label { font-size: 12px; color: var(--ink2); white-space: nowrap; }
 
 .flow-heading { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
 .flow-sub { font-size: 14px; color: var(--ink2); margin-bottom: 24px; }
 
-/* Method cards */
 .method-cards { display: flex; flex-direction: column; gap: 12px; }
 .method-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
   display: flex; align-items: flex-start; gap: 16px;
-  cursor: pointer;
-  transition: border-color 0.15s;
+  cursor: pointer; transition: border-color 0.15s;
 }
-.method-card:hover { border-color: var(--ink3); }
-.method-card.primary { border-color: var(--teal-dim); }
+.method-card:hover { border-color: var(--border2); }
+.method-card.primary { border-color: var(--blue-dim); }
 .method-icon {
   width: 44px; height: 44px;
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; flex-shrink: 0;
 }
-.method-card.primary .method-icon { background: var(--teal-faint); color: var(--teal); }
+.method-card.primary .method-icon { background: var(--blue-faint); color: var(--blue-primary); }
 .method-card:not(.primary) .method-icon { background: var(--bg3); color: var(--ink2); }
 .method-info { flex: 1; }
 .method-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .method-title { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; font-size: 16px; }
 .fastest-badge {
-  font-size: 10px; font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: var(--teal-faint);
-  color: var(--teal);
+  font-size: 10px; font-weight: 500; padding: 2px 8px;
+  border-radius: 8px; background: var(--blue-faint); color: var(--blue-primary);
 }
 .method-desc { font-size: 13px; color: var(--ink2); line-height: 1.4; }
 
-/* Form */
 .form-group { margin-bottom: 18px; }
 .form-label { display: block; font-size: 13px; color: var(--ink2); margin-bottom: 6px; font-weight: 500; }
 .form-input, .form-select {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--ink);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
+  width: 100%; padding: 12px 14px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--ink); font-size: 14px;
+  outline: none; transition: border-color 0.15s;
   -webkit-appearance: none;
 }
-.form-input:focus, .form-select:focus { border-color: var(--teal); }
+.form-input:focus, .form-select:focus { border-color: var(--blue-primary); }
 .form-select { cursor: pointer; }
+.form-textarea { resize: vertical; min-height: 60px; }
 
 .btn-primary {
-  width: 100%;
-  padding: 14px;
-  background: var(--teal);
-  color: var(--bg);
-  font-weight: 700;
-  font-size: 15px;
-  border-radius: 12px;
-  margin-top: 10px;
+  width: 100%; padding: 14px;
+  background: var(--blue-primary); color: #fff;
+  font-weight: 700; font-size: 15px;
+  border-radius: 12px; margin-top: 10px;
 }
-.btn-primary:hover { background: #25d993; }
+.btn-primary:hover { background: #5577ff; }
 .btn-primary:disabled { background: var(--ink3); cursor: default; }
 .btn-primary:disabled:active { transform: none; }
 
-/* Confirm step */
 .confirm-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px; margin-bottom: 20px;
 }
 .confirm-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .confirm-row:last-child { border-bottom: none; }
@@ -391,41 +626,45 @@ input, select, textarea { font-family: inherit; }
 
 .diff-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .diff-btn {
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 10px 16px; border-radius: 10px;
   font-size: 13px; font-weight: 500;
-  background: var(--bg2);
-  border: 1px solid var(--border);
+  background: var(--bg2); border: 1px solid var(--border);
   transition: all 0.15s;
 }
-.diff-btn.active { border-color: var(--teal); background: var(--teal-faint); color: var(--teal); }
+.diff-btn.active { border-color: var(--blue-primary); background: var(--blue-faint); color: var(--blue-primary); }
 
 .schedule-preview {
-  background: var(--teal-faint);
-  border: 1px solid var(--teal-dim);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 20px;
+  background: var(--blue-faint); border: 1px solid var(--blue-dim);
+  border-radius: 14px; padding: 18px; margin-bottom: 20px;
 }
-.schedule-title { font-size: 13px; color: var(--teal); font-weight: 500; margin-bottom: 10px; }
+.schedule-title { font-size: 13px; color: var(--blue-primary); font-weight: 500; margin-bottom: 10px; }
 .schedule-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
 .schedule-row .label { color: var(--ink2); }
 
-/* Success */
 .success-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
 .success-check {
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  background: var(--teal-faint);
-  color: var(--teal);
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--blue-faint); color: var(--blue-primary);
   display: flex; align-items: center; justify-content: center;
-  font-size: 40px;
-  margin-bottom: 20px;
+  font-size: 40px; margin-bottom: 20px;
 }
 .success-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
 .success-sub { font-size: 14px; color: var(--ink2); margin-bottom: 30px; }
 
-/* Modal */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  margin-bottom: 16px;
+}
+.upload-area:hover { border-color: var(--blue-primary); }
+.upload-area i { font-size: 36px; color: var(--ink2); margin-bottom: 8px; }
+.upload-area p { font-size: 13px; color: var(--ink2); }
+.upload-status { font-size: 13px; color: var(--ink2); margin-bottom: 16px; text-align: center; }
+
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.6);
@@ -437,141 +676,113 @@ input, select, textarea { font-family: inherit; }
 }
 .modal-overlay.show { opacity: 1; pointer-events: auto; }
 .modal {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  max-width: 360px;
-  width: 100%;
-  text-align: center;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  max-width: 360px; width: 100%; text-align: center;
 }
-.modal-icon { font-size: 36px; color: var(--teal); margin-bottom: 12px; }
+.modal-icon { font-size: 36px; color: var(--blue-primary); margin-bottom: 12px; }
 .modal h3 { font-size: 18px; margin-bottom: 8px; }
 .modal p { font-size: 13px; color: var(--ink2); margin-bottom: 20px; line-height: 1.5; }
 .modal-close {
-  padding: 10px 24px;
-  background: var(--bg3);
-  border-radius: 10px;
-  font-weight: 500;
-  font-size: 14px;
+  padding: 10px 24px; background: var(--bg3);
+  border-radius: 10px; font-weight: 500; font-size: 14px;
 }
 
-/* Placeholder screen */
-.placeholder {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 60vh; text-align: center;
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .bottom-nav { display: flex; }
+  .screen { padding: 0 20px 100px; max-width: none; }
+  .fab { bottom: max(74px, calc(60px + env(safe-area-inset-bottom))); right: 20px; }
+  .topbar .topbar-left { display: flex !important; }
 }
-.placeholder i { font-size: 48px; color: var(--ink3); margin-bottom: 16px; }
-.placeholder h2 { font-size: 20px; margin-bottom: 6px; }
-.placeholder p { font-size: 14px; color: var(--ink2); }
 
-/* Task detail expand coloring per subject */
-.diff-dot.filled.c-teal { background: var(--teal); }
-.diff-dot.filled.c-purple { background: var(--purple); }
-.diff-dot.filled.c-orange { background: var(--orange); }
-.diff-dot.filled.c-blue { background: var(--blue); }
-.diff-dot.filled.c-red { background: var(--red); }
-.diff-dot.filled.c-yellow { background: var(--yellow); }
-.diff-dot.filled.c-pink { background: var(--pink); }
-
-/* Responsive */
 @media (max-width: 480px) {
-  .summary-top { flex-direction: column; gap: 10px; }
+  .task-dates { gap: 16px; }
   .task-meta { gap: 10px; }
-  .fab { transform: translateX(calc(50vw - 66px)); }
-  .fab:active { transform: translateX(calc(50vw - 66px)) scale(0.93); }
 }
 
-/* Scrollbar */
 .screen::-webkit-scrollbar { width: 0; }
 </style>
 </head>
 <body>
 
 <div class="app">
-  <!-- Screen 1: Task List -->
-  <div id="screen-tasks" class="screen active">
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
-        <span class="wordmark">paced</span>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+      <span class="wordmark">paced</span>
+    </div>
+    <button class="sidebar-tab active" data-screen="tasks"><i class="ti ti-layout-list"></i>Tasks</button>
+    <button class="sidebar-tab" data-screen="calendar"><i class="ti ti-calendar"></i>Calendar</button>
+    <button class="sidebar-tab" data-screen="progress"><i class="ti ti-chart-bar"></i>Progress</button>
+    <button class="sidebar-tab" data-screen="settings"><i class="ti ti-settings"></i>Settings</button>
+  </aside>
+
+  <div class="main-area">
+    <div id="screen-tasks" class="screen active">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+          <span class="wordmark">paced</span>
+        </div>
       </div>
-      <div class="topbar-right">
-        <button class="topbar-btn"><i class="ti ti-bell"></i></button>
-        <div class="avatar">AH</div>
+      <div class="date-label" id="today-date"></div>
+      <h1 class="main-heading">Today</h1>
+      <div class="summary-card" id="summary-card"></div>
+      <div class="filters">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="due-soon">Due soon</button>
+        <button class="pill" data-filter="not-started">Not started</button>
       </div>
+      <div class="task-list" id="task-list"></div>
     </div>
 
-    <div class="date-label" id="today-date"></div>
-    <h1 class="main-heading">Today</h1>
-
-    <div class="summary-card" id="summary-card"></div>
-
-    <div class="filters">
-      <button class="pill active" data-filter="all">All</button>
-      <button class="pill" data-filter="due-soon">Due soon</button>
-      <button class="pill" data-filter="not-started">Not started</button>
-    </div>
-
-    <div class="task-list" id="task-list"></div>
-  </div>
-
-  <!-- Screen 2: Add Flow -->
-  <div id="screen-add" class="screen hidden-right">
-    <div class="flow-topbar">
-      <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
-      <div class="step-indicator">
-        <div class="step-bar" id="sb1"></div>
-        <div class="step-bar" id="sb2"></div>
-        <div class="step-bar" id="sb3"></div>
+    <div id="screen-add" class="screen hidden-right">
+      <div class="flow-topbar">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <div class="step-indicator">
+          <div class="step-bar" id="sb1"></div>
+          <div class="step-bar" id="sb2"></div>
+          <div class="step-bar" id="sb3"></div>
+        </div>
+        <span class="step-label" id="step-label">Step 1 of 3</span>
       </div>
-      <span class="step-label" id="step-label">Step 1 of 3</span>
+      <div id="flow-content"></div>
     </div>
-    <div id="flow-content"></div>
-  </div>
 
-  <!-- Screen 3: Placeholder screens -->
-  <div id="screen-calendar" class="screen hidden-right">
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
-        <span class="wordmark">paced</span>
+    <div id="screen-calendar" class="screen hidden-right">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+          <span class="wordmark">paced</span>
+        </div>
       </div>
+      <div id="calendar-content"></div>
     </div>
-    <div class="placeholder">
-      <i class="ti ti-calendar"></i>
-      <h2>Calendar</h2>
-      <p>Coming soon</p>
-    </div>
-  </div>
-  <div id="screen-progress" class="screen hidden-right">
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
-        <span class="wordmark">paced</span>
+
+    <div id="screen-progress" class="screen hidden-right">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+          <span class="wordmark">paced</span>
+        </div>
       </div>
+      <h1 class="main-heading">Progress</h1>
+      <div id="progress-content"></div>
     </div>
-    <div class="placeholder">
-      <i class="ti ti-chart-bar"></i>
-      <h2>Progress</h2>
-      <p>Coming soon</p>
-    </div>
-  </div>
-  <div id="screen-settings" class="screen hidden-right">
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
-        <span class="wordmark">paced</span>
+
+    <div id="screen-settings" class="screen hidden-right">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+          <span class="wordmark">paced</span>
+        </div>
       </div>
-    </div>
-    <div class="placeholder">
-      <i class="ti ti-settings"></i>
-      <h2>Settings</h2>
-      <p>Coming soon</p>
+      <h1 class="main-heading">Settings</h1>
+      <div id="settings-content"></div>
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <button class="nav-tab active" data-screen="tasks"><i class="ti ti-layout-list"></i>Tasks</button>
     <button class="nav-tab" data-screen="calendar"><i class="ti ti-calendar"></i>Calendar</button>
@@ -579,38 +790,66 @@ input, select, textarea { font-family: inherit; }
     <button class="nav-tab" data-screen="settings"><i class="ti ti-settings"></i>Settings</button>
   </nav>
 
-  <!-- FAB -->
   <button class="fab" id="fab" onclick="openAddFlow()"><i class="ti ti-plus"></i></button>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <div class="modal-icon"><i class="ti ti-camera"></i></div>
-      <h3>Coming soon</h3>
-      <p>Claude vision parsing will be added soon. You'll be able to paste or drag a Satchel One screenshot and Paced will read it for you.</p>
+      <div class="modal-icon"><i class="ti ti-alert-circle"></i></div>
+      <h3 id="modal-title">Error</h3>
+      <p id="modal-msg">Something went wrong.</p>
       <button class="modal-close" onclick="closeModal()">Got it</button>
+    </div>
+  </div>
+
+  <div class="popover-overlay" id="subject-popover">
+    <div class="popover">
+      <h3 id="popover-title">Add subject</h3>
+      <div class="form-group">
+        <label class="form-label">Emoji</label>
+        <input class="form-input" id="pop-emoji" placeholder="📚" maxlength="4">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-input" id="pop-name" placeholder="e.g. Drama">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Colour</label>
+        <select class="form-select" id="pop-color">
+          <option value="#3f63f2">Blue</option>
+          <option value="#A78BFA">Purple</option>
+          <option value="#FB923C">Orange</option>
+          <option value="#60A5FA">Light blue</option>
+          <option value="#ef4444">Red</option>
+          <option value="#FBBF24">Yellow</option>
+          <option value="#F472B6">Pink</option>
+          <option value="#22c55e">Green</option>
+        </select>
+      </div>
+      <div class="popover-btns">
+        <button class="popover-cancel" onclick="closeSubjectPopover()">Cancel</button>
+        <button class="popover-save" id="popover-save-btn" onclick="saveSubjectPopover()">Save</button>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
-const SUBJECT_COLORS = {
-  'Sports Science': 'teal',
-  'Maths': 'purple',
-  'Physics': 'orange',
-  'English': 'blue',
-  'Chemistry': 'red',
-  'Biology': 'yellow',
-  'History': 'pink',
-  'Geography': 'teal',
-  'Computer Science': 'blue',
-  'Art': 'orange',
-};
+<input type="file" id="file-input" accept="image/*" style="display:none">
 
-const COLOR_MAP = {
-  teal: 'var(--teal)', purple: 'var(--purple)', orange: 'var(--orange)',
-  blue: 'var(--blue)', red: 'var(--red)', yellow: 'var(--yellow)', pink: 'var(--pink)',
-};
+<script>
+const esc = (s) => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+
+const DEFAULT_SUBJECTS = [
+  { name: 'Sports Science', emoji: '🏃', color: '#3f63f2' },
+  { name: 'Mathematics', emoji: '📐', color: '#A78BFA' },
+  { name: 'Physics', emoji: '⚡', color: '#FB923C' },
+  { name: 'English', emoji: '📖', color: '#60A5FA' },
+  { name: 'Chemistry', emoji: '🧪', color: '#ef4444' },
+  { name: 'Biology', emoji: '🧬', color: '#FBBF24' },
+  { name: 'History', emoji: '📜', color: '#F472B6' },
+  { name: 'Geography', emoji: '🌍', color: '#22c55e' },
+  { name: 'Computer Science', emoji: '💻', color: '#60A5FA' },
+  { name: 'Art', emoji: '🎨', color: '#FB923C' },
+];
 
 const DIFFICULTY_LABELS = ['Easy','OK','Tricky','Hard','Brutal'];
 const DIFFICULTY_MULT = [0.8, 1.0, 1.2, 1.5, 2.0];
@@ -620,68 +859,127 @@ const TIME_OPTIONS = [
   {label:'2.5 hours',val:150},{label:'3 hours',val:180},{label:'3+ hours',val:210},
 ];
 
+let subjects = [];
 let tasks = [];
+let history = [];
+let streak = { current: 0, best: 0, lastDate: null };
 let currentFilter = 'all';
 let expandedId = null;
 let flowStep = 1;
 let flowData = {};
 let currentScreen = 'tasks';
+let calWeekOffset = 0;
+let previousOpen = false;
+let editingSubjectIdx = -1;
+
+function loadSubjects() {
+  const saved = localStorage.getItem('paced_subjects');
+  if (saved) { subjects = JSON.parse(saved); return; }
+  subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+  saveSubjects();
+}
+function saveSubjects() { localStorage.setItem('paced_subjects', JSON.stringify(subjects)); }
+function getSubject(name) { return subjects.find(s => s.name === name) || { name, emoji: '📚', color: '#3f63f2' }; }
 
 function loadTasks() {
   const saved = localStorage.getItem('paced_tasks');
-  if (saved) { tasks = JSON.parse(saved); return; }
+  if (saved) {
+    tasks = JSON.parse(saved);
+    let migrated = false;
+    tasks.forEach(t => {
+      if (t.subject === 'Maths') { t.subject = 'Mathematics'; migrated = true; }
+      if ('sessionsComplete' in t) { delete t.sessionsComplete; migrated = true; }
+      if (t.started === undefined) { t.started = false; migrated = true; }
+      if (t.done === undefined) { t.done = false; migrated = true; }
+      if (t.overdueChecked === undefined) { t.overdueChecked = false; migrated = true; }
+    });
+    if (migrated) saveTasks();
+    return;
+  }
   const today = new Date();
   const d = (off) => { const x = new Date(today); x.setDate(x.getDate() + off); return x.toISOString().split('T')[0]; };
   tasks = [
-    { id: '1', subject: 'Sports Science', title: 'Coursework draft — Section A', desc: 'Write up the methodology section for the Sports Science coursework. Include references to at least three studies.', dueDate: d(5), estimate: 120, difficulty: 2, sessionsComplete: 2, createdDate: d(-3) },
-    { id: '2', subject: 'Maths', title: 'Sparx Homework — Week 12', desc: 'Complete all assigned Sparx tasks for this week. Focus on algebraic fractions.', dueDate: d(3), estimate: 60, difficulty: 1, sessionsComplete: 0, createdDate: d(-1) },
-    { id: '3', subject: 'Physics', title: 'Waves & Optics booklet pp.14–18', desc: 'Answer questions on refraction and diffraction. Show all working.', dueDate: d(7), estimate: 45, difficulty: 3, sessionsComplete: 1, createdDate: d(-2) },
+    { id:'1', subject:'Sports Science', title:'Coursework draft — Section A', desc:'Write up the methodology section.', dueDate: d(8), estimate:120, difficulty:2, started:false, done:false, overdueChecked:false, createdDate: d(-2) },
+    { id:'2', subject:'Mathematics', title:'Sparx Homework — Week 12', desc:'Complete all assigned Sparx tasks.', dueDate: d(3), estimate:60, difficulty:1, started:false, done:false, overdueChecked:false, createdDate: d(-1) },
+    { id:'3', subject:'Physics', title:'Waves & Optics booklet pp.14–18', desc:'Answer questions on refraction and diffraction.', dueDate: d(6), estimate:45, difficulty:3, started:false, done:false, overdueChecked:false, createdDate: d(0) },
+    { id:'4', subject:'English', title:'Macbeth essay — Act 3 analysis', desc:'Write a 500-word essay on the significance of the banquet scene.', dueDate: d(-2), estimate:90, difficulty:2, started:true, done:false, overdueChecked:false, createdDate: d(-7) },
+    { id:'5', subject:'Chemistry', title:'Titration calculations worksheet', desc:'Complete questions 1–12 on acid-base titrations.', dueDate: d(-1), estimate:45, difficulty:1, started:false, done:false, overdueChecked:false, createdDate: d(-5) },
+    { id:'6', subject:'History', title:'Cold War timeline poster', desc:'Create an illustrated timeline from 1947 to 1991.', dueDate: d(1), estimate:150, difficulty:2, started:true, done:false, overdueChecked:false, createdDate: d(-4) },
+    { id:'7', subject:'Biology', title:'Cell division diagram labels', desc:'Label all stages of mitosis and meiosis on the provided diagrams.', dueDate: d(10), estimate:30, difficulty:0, started:false, done:false, overdueChecked:false, createdDate: d(0) },
+    { id:'8', subject:'Geography', title:'River Tees case study notes', desc:'Summarise the upper, middle and lower course features.', dueDate: d(-3), estimate:60, difficulty:1, started:true, done:true, overdueChecked:false, createdDate: d(-8) },
   ];
   saveTasks();
 }
-
 function saveTasks() { localStorage.setItem('paced_tasks', JSON.stringify(tasks)); }
 
-function getSubjectColor(subj) { return SUBJECT_COLORS[subj] || 'teal'; }
+function loadHistory() {
+  const saved = localStorage.getItem('paced_history');
+  history = saved ? JSON.parse(saved) : [];
+}
+function saveHistory() { localStorage.setItem('paced_history', JSON.stringify(history)); }
+
+function loadStreak() {
+  const saved = localStorage.getItem('paced_streak');
+  if (saved) { streak = JSON.parse(saved); return; }
+  streak = { current: 0, best: 0, lastDate: null };
+}
+function saveStreak() { localStorage.setItem('paced_streak', JSON.stringify(streak)); }
+
+function updateStreak() {
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (streak.lastDate === todayStr) return;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  if (streak.lastDate === yesterdayStr) {
+    streak.current++;
+  } else {
+    streak.current = 1;
+  }
+  streak.lastDate = todayStr;
+  if (streak.current > streak.best) streak.best = streak.current;
+  saveStreak();
+}
 
 function calcSchedule(estimate, diffIdx, dueDate) {
-  const total = Math.round(estimate * DIFFICULTY_MULT[diffIdx]);
-  const sessions = Math.ceil(total / 25);
+  const totalMinutes = Math.round(estimate * DIFFICULTY_MULT[diffIdx]);
   const due = new Date(dueDate);
+  const daysNeeded = Math.ceil(totalMinutes / 60) + 1;
   const start = new Date(due);
-  start.setDate(start.getDate() - (sessions + 1));
+  start.setDate(start.getDate() - daysNeeded);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(0,0,0,0);
   if (start < tomorrow) start.setTime(tomorrow.getTime());
-  return { totalMinutes: total, sessions, startDate: start };
+  return { totalMinutes, startDate: start };
 }
 
-function getTotalSessions(task) {
-  return calcSchedule(task.estimate, task.difficulty, task.dueDate).sessions;
+function getStartDate(task) {
+  return calcSchedule(task.estimate, task.difficulty, task.dueDate).startDate;
 }
 
-function isToday(dateStr) {
-  return dateStr === new Date().toISOString().split('T')[0];
+function formatDate(str) {
+  return new Date(str).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function formatTime(mins) {
+  if (mins < 60) return '~' + mins + ' min';
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m > 0 ? '~' + h + 'h ' + m + 'm' : '~' + h + ' hrs';
 }
 
 function getStatus(task) {
-  const total = getTotalSessions(task);
-  if (task.sessionsComplete >= total) return { text: 'Done', cls: 'status-done' };
-  const sched = calcSchedule(task.estimate, task.difficulty, task.dueDate);
+  if (task.done) return { text: 'Done', cls: 'status-done' };
   const today = new Date(); today.setHours(0,0,0,0);
-  const start = new Date(sched.startDate); start.setHours(0,0,0,0);
+  const start = new Date(getStartDate(task)); start.setHours(0,0,0,0);
   const due = new Date(task.dueDate); due.setHours(0,0,0,0);
-  if (today > due) return { text: 'Overdue', cls: 'status-overdue' };
-  if (today >= start && today <= due) {
-    const diffDays = Math.ceil((today - start) / 86400000);
-    if (diffDays <= 1) return { text: 'Today', cls: 'status-today' };
-    return { text: 'Today', cls: 'status-today' };
-  }
+  if (today > due) return { text: 'Past due', cls: 'status-pastdue' };
+  if (today >= start) return { text: 'Start today', cls: 'status-today' };
   const daysUntilStart = Math.ceil((start - today) / 86400000);
-  if (daysUntilStart <= 2) {
+  if (daysUntilStart <= 3) {
     const dayName = start.toLocaleDateString('en-GB', { weekday: 'short' });
-    return { text: `Start by ${dayName}`, cls: 'status-start' };
+    return { text: 'Start by ' + dayName, cls: 'status-start' };
   }
   return { text: 'On track', cls: 'status-ontrack' };
 }
@@ -689,41 +987,29 @@ function getStatus(task) {
 function isDueSoon(task) {
   const due = new Date(task.dueDate);
   const today = new Date(); today.setHours(0,0,0,0);
-  const diff = (due - today) / 86400000;
-  return diff <= 3 && task.sessionsComplete < getTotalSessions(task);
+  return (due - today) / 86400000 <= 3 && !task.done;
 }
-
-function isNotStarted(task) { return task.sessionsComplete === 0 && task.sessionsComplete < getTotalSessions(task); }
-
-function formatDate(str) {
-  const d = new Date(str);
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-}
+function isNotStarted(task) { return !task.started && !task.done; }
 
 function renderSummary() {
-  const today = new Date().toISOString().split('T')[0];
-  const todayTasks = tasks.filter(t => {
-    const status = getStatus(t);
-    return status.text === 'Today' || status.text === 'Overdue';
-  });
-  const totalTime = todayTasks.reduce((sum, t) => sum + 25, 0);
-  const totalSessions = todayTasks.reduce((sum, t) => sum + getTotalSessions(t), 0);
-  const doneSessions = todayTasks.reduce((sum, t) => sum + t.sessionsComplete, 0);
-  const segCount = Math.max(totalSessions, 1);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const weekAhead = new Date(today); weekAhead.setDate(weekAhead.getDate() + 7);
+  const active = tasks.filter(t => !t.done);
+  const startToday = active.filter(t => { const s = new Date(getStartDate(t)); s.setHours(0,0,0,0); return s <= today; });
+  const thisWeek = active.filter(t => { const s = new Date(getStartDate(t)); s.setHours(0,0,0,0); return s <= weekAhead; });
 
-  let segs = '';
-  for (let i = 0; i < Math.min(segCount, 20); i++) {
-    segs += `<div class="progress-seg ${i < doneSessions ? 'done' : ''}"></div>`;
-  }
+  const msg = startToday.length === 0
+    ? "You're ahead — nothing to start today"
+    : startToday.length === 1
+    ? '1 task needs your attention today'
+    : startToday.length + ' tasks need your attention today';
 
-  document.getElementById('summary-card').innerHTML = `
-    <div class="summary-top">
-      <div><div class="summary-stat-label">Tasks today</div><div class="summary-stat-value">${todayTasks.length}</div></div>
-      <div><div class="summary-stat-label">Est. time</div><div class="summary-stat-value">${todayTasks.length > 0 ? todayTasks.length * 25 + ' min' : '—'}</div></div>
-    </div>
-    <div class="progress-bar">${segs}</div>
-    <div class="summary-note">${doneSessions} of ${totalSessions} sessions complete</div>
-  `;
+  document.getElementById('summary-card').innerHTML =
+    '<div class="summary-msg">' + esc(msg) + '</div>' +
+    '<div class="summary-counts">' +
+      '<div class="summary-count"><span class="summary-count-val">' + startToday.length + '</span><span class="summary-count-label">Start today</span></div>' +
+      '<div class="summary-count"><span class="summary-count-val">' + thisWeek.length + '</span><span class="summary-count-label">This week</span></div>' +
+    '</div>';
 }
 
 function renderTasks() {
@@ -732,87 +1018,192 @@ function renderTasks() {
   if (currentFilter === 'due-soon') filtered = tasks.filter(isDueSoon);
   else if (currentFilter === 'not-started') filtered = tasks.filter(isNotStarted);
 
-  list.innerHTML = filtered.map(t => {
-    const color = getSubjectColor(t.subject);
-    const cssColor = COLOR_MAP[color];
+  const todayStr = new Date().toISOString().split('T')[0];
+  const active = filtered.filter(t => !t.done);
+  const doneNotYetDue = filtered.filter(t => t.done && t.dueDate >= todayStr);
+  const previous = filtered.filter(t => t.done && t.dueDate < todayStr);
+
+  let html = '';
+
+  active.forEach(t => {
+    const subj = getSubject(t.subject);
     const status = getStatus(t);
-    const total = getTotalSessions(t);
-    const remaining = Math.max(0, total - t.sessionsComplete);
     const sched = calcSchedule(t.estimate, t.difficulty, t.dueDate);
+    const startStr = sched.startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
     const isExpanded = expandedId === t.id;
-    const isDone = t.sessionsComplete >= total;
+    const isPastDue = new Date(t.dueDate) < new Date(todayStr) && !t.done;
+    const needsCheck = isPastDue && !t.overdueChecked;
 
     let dots = '';
-    for (let i = 0; i < 5; i++) {
-      dots += `<div class="diff-dot ${i <= t.difficulty ? 'filled' : ''}" style="${i <= t.difficulty ? 'background:' + cssColor : ''}"></div>`;
+    for (let i = 0; i < 5; i++) dots += '<div class="diff-dot ' + (i <= t.difficulty ? 'filled' : '') + '"></div>';
+
+    let actionsHtml;
+    if (needsCheck) {
+      actionsHtml =
+        '<div class="btn-row">' +
+          '<button class="btn-outline overdue-finished" onclick="event.stopPropagation();markFinished(\'' + esc(t.id) + '\')">Finished</button>' +
+          '<button class="btn-outline overdue-notfinished" onclick="event.stopPropagation();markNotFinished(\'' + esc(t.id) + '\')">Not finished</button>' +
+        '</div>';
+    } else if (isPastDue && t.overdueChecked) {
+      actionsHtml =
+        '<div class="btn-row">' +
+          '<button class="btn-fill" onclick="event.stopPropagation();markDone(\'' + esc(t.id) + '\')">Mark as done</button>' +
+        '</div>';
+    } else {
+      actionsHtml =
+        '<div class="btn-row">' +
+          '<button class="btn-outline ' + (t.started ? 'started' : '') + '" onclick="event.stopPropagation();markStarted(\'' + esc(t.id) + '\')">' + (t.started ? '✓ Started' : 'Mark as started') + '</button>' +
+          '<button class="btn-fill" ' + (!t.started ? 'disabled' : '') + ' onclick="event.stopPropagation();markDone(\'' + esc(t.id) + '\')">Mark as done</button>' +
+        '</div>';
     }
 
-    return `
-      <div class="task-card ${isExpanded ? 'expanded' : ''} ${isDone ? 'complete' : ''}" onclick="toggleExpand('${t.id}')">
-        <div class="task-card-top">
-          <div class="subject-label"><div class="subject-dot" style="background:${cssColor}"></div>${t.subject}</div>
-          <span class="status-badge ${status.cls}">${status.text}</span>
-        </div>
-        <div class="task-title">${t.title}</div>
-        <div class="task-meta">
-          <div class="meta-item"><i class="ti ti-calendar-due"></i>${formatDate(t.dueDate)}</div>
-          <div class="meta-item"><i class="ti ti-clock"></i>25 min sessions</div>
-          <div class="meta-item"><div class="difficulty-dots">${dots}</div></div>
-        </div>
-        <div class="task-chevron"><i class="ti ti-chevron-right"></i></div>
-        <div class="task-expand">
-          <div class="expand-inner">
-            <div class="task-desc">${t.desc}</div>
-            <div class="mini-stats">
-              <div class="mini-stat"><div class="mini-stat-label">Started</div><div class="mini-stat-value">${formatDate(t.createdDate)}</div></div>
-              <div class="mini-stat"><div class="mini-stat-label">Remaining</div><div class="mini-stat-value">${remaining} sessions</div></div>
-              <div class="mini-stat"><div class="mini-stat-label">Total time</div><div class="mini-stat-value">${sched.totalMinutes} min</div></div>
-            </div>
-            <button class="btn-complete" ${isDone ? 'disabled' : ''} onclick="event.stopPropagation();markComplete('${t.id}')">
-              ${isDone ? 'All sessions complete ✓' : 'Mark session complete'}
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
+    html +=
+      '<div class="task-card ' + (isExpanded || needsCheck ? 'expanded' : '') + '" data-id="' + esc(t.id) + '" onclick="toggleExpand(\'' + esc(t.id) + '\')">' +
+        '<div class="task-card-top">' +
+          '<div class="subject-label"><span class="subject-emoji">' + esc(subj.emoji) + '</span>' + esc(t.subject) + '</div>' +
+          '<span class="status-badge ' + status.cls + '">' + esc(status.text) + '</span>' +
+        '</div>' +
+        '<div class="task-title">' + esc(t.title) + '</div>' +
+        '<div class="task-dates">' +
+          '<div class="task-date-group"><span class="task-date-label">Start by</span><span class="task-date-value start">' + esc(startStr) + '</span></div>' +
+          '<div class="task-date-group"><span class="task-date-label">Due</span><span class="task-date-value due">' + esc(formatDate(t.dueDate)) + '</span></div>' +
+        '</div>' +
+        '<div class="task-meta">' +
+          '<div class="meta-item"><div class="difficulty-dots">' + dots + '</div></div>' +
+          '<div class="meta-item"><i class="ti ti-clock"></i>' + esc(formatTime(sched.totalMinutes)) + '</div>' +
+        '</div>' +
+        '<div class="task-chevron"><i class="ti ti-chevron-right"></i></div>' +
+        '<div class="task-expand"><div class="expand-inner">' +
+          (t.desc ? '<div class="task-desc">' + esc(t.desc) + '</div>' : '') +
+          actionsHtml +
+        '</div></div>' +
+      '</div>';
+  });
+
+  doneNotYetDue.forEach(t => {
+    const subj = getSubject(t.subject);
+    html +=
+      '<div class="task-card done-card">' +
+        '<div class="task-card-top">' +
+          '<div class="subject-label"><span class="subject-emoji">' + esc(subj.emoji) + '</span>' + esc(t.subject) + '</div>' +
+          '<span class="status-badge status-done">Done</span>' +
+        '</div>' +
+        '<div class="task-title">' + esc(t.title) + '</div>' +
+      '</div>';
+  });
+
+  if (previous.length > 0) {
+    html +=
+      '<div class="previous-section">' +
+        '<div class="previous-divider ' + (previousOpen ? 'open' : '') + '" onclick="previousOpen=!previousOpen;renderTasks()">' +
+          'Previous (' + previous.length + ') <i class="ti ti-chevron-down"></i>' +
+        '</div>' +
+        (previousOpen ? '<div class="previous-list">' + previous.map(t => {
+          const subj = getSubject(t.subject);
+          return '<div class="previous-row"><span class="subject-emoji">' + esc(subj.emoji) + '</span><span class="prev-title">' + esc(t.title) + '</span><span class="prev-date">' + esc(formatDate(t.dueDate)) + '</span></div>';
+        }).join('') + '</div>' : '') +
+      '</div>';
+  }
+
+  list.innerHTML = html;
 }
 
 function toggleExpand(id) { expandedId = expandedId === id ? null : id; renderTasks(); }
 
-function markComplete(id) {
+function markStarted(id) {
   const task = tasks.find(t => t.id === id);
-  if (!task) return;
-  const total = getTotalSessions(task);
-  if (task.sessionsComplete >= total) return;
-  task.sessionsComplete++;
+  if (!task || task.started) return;
+  task.started = true;
   saveTasks();
-
-  const card = document.querySelector(`.task-card[onclick*="${id}"]`);
-  if (card) { card.style.animation = 'pulseGreen 0.5s'; setTimeout(() => card.style.animation = '', 500); }
-
-  renderSummary();
   renderTasks();
 }
 
-// Navigation
+function markDone(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task || task.done) return;
+  if (!task.started && !task.overdueChecked) return;
+  task.done = true;
+  saveTasks();
+  updateStreak();
+
+  history.push({
+    taskId: task.id,
+    subject: task.subject,
+    estimate: task.estimate,
+    difficulty: task.difficulty,
+    doneDate: new Date().toISOString().split('T')[0],
+  });
+  saveHistory();
+  renderSummary();
+
+  const card = document.querySelector('.task-card[data-id="' + id + '"]');
+  if (card) {
+    card.style.animation = 'pulseGreen 0.5s';
+    setTimeout(() => { expandedId = null; renderTasks(); if (currentScreen === 'calendar') renderCalendar(); }, 500);
+  } else {
+    expandedId = null;
+    renderTasks();
+    if (currentScreen === 'calendar') renderCalendar();
+  }
+}
+
+function markFinished(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task || task.done) return;
+  task.done = true;
+  task.started = true;
+  saveTasks();
+  updateStreak();
+
+  history.push({
+    taskId: task.id,
+    subject: task.subject,
+    estimate: task.estimate,
+    difficulty: task.difficulty,
+    doneDate: new Date().toISOString().split('T')[0],
+  });
+  saveHistory();
+  renderSummary();
+
+  const card = document.querySelector('.task-card[data-id="' + id + '"]');
+  if (card) {
+    card.style.animation = 'pulseGreen 0.5s';
+    setTimeout(() => { expandedId = null; renderTasks(); if (currentScreen === 'calendar') renderCalendar(); }, 500);
+  } else {
+    expandedId = null;
+    renderTasks();
+    if (currentScreen === 'calendar') renderCalendar();
+  }
+}
+
+function markNotFinished(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  task.overdueChecked = true;
+  saveTasks();
+  renderTasks();
+}
+
 function showScreen(name) {
-  const prev = currentScreen;
   currentScreen = name;
   document.querySelectorAll('.screen').forEach(s => {
     const sName = s.id.replace('screen-', '');
-    if (sName === name) { s.className = 'screen active'; }
-    else { s.className = 'screen hidden-right'; }
+    s.className = sName === name ? 'screen active' : 'screen hidden-right';
   });
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.screen === name));
+  document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.toggle('active', t.dataset.screen === name));
   document.getElementById('fab').classList.toggle('hide', name !== 'tasks');
+  if (name === 'calendar') renderCalendar();
+  if (name === 'progress') renderProgress();
+  if (name === 'settings') renderSettings();
 }
 
 document.querySelectorAll('.nav-tab').forEach(tab => {
   tab.addEventListener('click', () => showScreen(tab.dataset.screen));
 });
-
-// Filters
+document.querySelectorAll('.sidebar-tab').forEach(tab => {
+  tab.addEventListener('click', () => showScreen(tab.dataset.screen));
+});
 document.querySelectorAll('.pill').forEach(pill => {
   pill.addEventListener('click', () => {
     currentFilter = pill.dataset.filter;
@@ -821,10 +1212,258 @@ document.querySelectorAll('.pill').forEach(pill => {
   });
 });
 
-// Add flow
+function renderCalendar() {
+  const container = document.getElementById('calendar-content');
+  const activeTasks = tasks.filter(t => !t.done);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const weekStart = new Date(today);
+  const day = weekStart.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  weekStart.setDate(weekStart.getDate() + diff + calWeekOffset * 7);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  const fmt = (d) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const rangeLabel = fmt(weekStart) + ' — ' + fmt(weekEnd);
+  let subtitle = '';
+  if (calWeekOffset === 0) subtitle = 'This week';
+  else if (calWeekOffset === 1) subtitle = 'Next week';
+  else if (calWeekOffset === -1) subtitle = 'Last week';
+  else subtitle = calWeekOffset > 0 ? calWeekOffset + ' weeks ahead' : Math.abs(calWeekOffset) + ' weeks ago';
+
+  const startMap = {};
+  const dueMap = {};
+  activeTasks.forEach(t => {
+    const sDate = new Date(getStartDate(t)); sDate.setHours(0,0,0,0);
+    const sKey = sDate.toISOString().split('T')[0];
+    if (!startMap[sKey]) startMap[sKey] = [];
+    startMap[sKey].push(t);
+    const dKey = t.dueDate;
+    if (!dueMap[dKey]) dueMap[dKey] = [];
+    dueMap[dKey].push(t);
+  });
+
+  let daysHtml = '';
+  const todayStr = today.toISOString().split('T')[0];
+  const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weekTasks = new Set();
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart); d.setDate(d.getDate() + i);
+    const dStr = d.toISOString().split('T')[0];
+    const isToday = dStr === todayStr;
+    const starts = startMap[dStr] || [];
+    const dues = dueMap[dStr] || [];
+
+    let eventsHtml = '';
+    starts.forEach(t => {
+      weekTasks.add(t.id);
+      const subj = getSubject(t.subject);
+      eventsHtml += '<div class="cal-pill start-pill" title="' + esc(t.title) + '">' + esc(subj.emoji) + ' ' + esc(t.title) + '</div>';
+    });
+    dues.forEach(t => {
+      weekTasks.add(t.id);
+      const subj = getSubject(t.subject);
+      eventsHtml += '<div class="cal-pill due-pill" title="' + esc(t.title) + '">' + esc(subj.emoji) + ' ' + esc(t.title) + '</div>';
+    });
+
+    daysHtml +=
+      '<div class="cal-day">' +
+        '<div class="cal-day-header">' +
+          '<div class="cal-day-name">' + dayNames[i] + '</div>' +
+          '<div class="cal-day-num ' + (isToday ? 'today' : '') + '">' + d.getDate() + '</div>' +
+        '</div>' +
+        '<div class="cal-events">' + (eventsHtml || '<div style="color:var(--ink3);font-size:11px;text-align:center;padding-top:20px">—</div>') + '</div>' +
+      '</div>';
+  }
+
+  const weekTasksList = activeTasks.filter(t => weekTasks.has(t.id));
+  let summaryHtml = '';
+  if (weekTasksList.length > 0) {
+    const ws = weekStart.toISOString().split('T')[0];
+    const we = weekEnd.toISOString().split('T')[0];
+    summaryHtml = '<div class="cal-summary"><h3>This week\'s tasks</h3>';
+    weekTasksList.forEach(t => {
+      const subj = getSubject(t.subject);
+      const sDate = new Date(getStartDate(t)); sDate.setHours(0,0,0,0);
+      const sKey = sDate.toISOString().split('T')[0];
+      let chips = '';
+      if (sKey >= ws && sKey <= we) chips += '<span class="cal-chip start-chip">Start ' + formatDate(sKey) + '</span>';
+      if (t.dueDate >= ws && t.dueDate <= we) chips += '<span class="cal-chip due-chip">Due ' + formatDate(t.dueDate) + '</span>';
+      summaryHtml += '<div class="cal-summary-row"><span class="subject-emoji">' + esc(subj.emoji) + '</span> ' + esc(t.title) + ' ' + chips + '</div>';
+    });
+    summaryHtml += '</div>';
+  }
+
+  container.innerHTML =
+    '<h1 class="main-heading">Calendar</h1>' +
+    '<div class="cal-header"><div class="cal-nav">' +
+      '<button class="cal-nav-btn" onclick="calWeekOffset--;renderCalendar()"><i class="ti ti-chevron-left"></i></button>' +
+      '<span class="cal-range">' + esc(rangeLabel) + '</span>' +
+      '<button class="cal-nav-btn" onclick="calWeekOffset++;renderCalendar()"><i class="ti ti-chevron-right"></i></button>' +
+    '</div></div>' +
+    '<div class="cal-subtitle">' + esc(subtitle) + '</div>' +
+    '<div class="cal-legend">' +
+      '<div class="cal-legend-item"><div class="cal-swatch start"></div>Start reminder</div>' +
+      '<div class="cal-legend-item"><div class="cal-swatch due"></div>Due date</div>' +
+    '</div>' +
+    '<div class="cal-scroll"><div class="cal-grid">' + daysHtml + '</div></div>' +
+    summaryHtml;
+}
+
+function renderProgress() {
+  const container = document.getElementById('progress-content');
+  const todayStr = new Date().toISOString().split('T')[0];
+  const now = new Date();
+
+  const streakSub = streak.lastDate === todayStr ? 'Last active today' : streak.lastDate ? 'Last active ' + formatDate(streak.lastDate) : 'Complete a task to start';
+
+  const totalDone = history.length;
+  const totalMinutes = history.reduce((s, h) => s + Math.round(h.estimate * DIFFICULTY_MULT[h.difficulty]), 0);
+  const totalHours = (totalMinutes / 60).toFixed(1);
+
+  let onTimeCount = 0;
+  history.forEach(h => {
+    const task = tasks.find(t => t.id === h.taskId);
+    if (task && task.started) onTimeCount++;
+  });
+  const onTimePct = totalDone > 0 ? Math.round((onTimeCount / totalDone) * 100) : 0;
+
+  const weekStart = new Date(); weekStart.setHours(0,0,0,0);
+  const dayOfWeek = weekStart.getDay();
+  weekStart.setDate(weekStart.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  const weekStartStr = weekStart.toISOString().split('T')[0];
+  const thisWeekDone = history.filter(h => h.doneDate >= weekStartStr).length;
+
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().split('T')[0];
+  const thisMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0).toISOString().split('T')[0];
+  const thisMonthCount = history.filter(h => h.doneDate >= thisMonthStart && h.doneDate <= thisMonthEnd).length;
+  const lastMonthCount = history.filter(h => h.doneDate >= lastMonthStart && h.doneDate <= lastMonthEnd).length;
+  const monthDelta = thisMonthCount - lastMonthCount;
+  const deltaHtml = monthDelta !== 0 ? '<span class="stat-delta ' + (monthDelta > 0 ? 'up' : 'down') + '">' + (monthDelta > 0 ? '+' : '') + monthDelta + '</span>' : '';
+
+  let barHtml = '';
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const m = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const mStart = m.toISOString().split('T')[0];
+    const mEnd = new Date(m.getFullYear(), m.getMonth() + 1, 0).toISOString().split('T')[0];
+    const count = history.filter(h => h.doneDate >= mStart && h.doneDate <= mEnd).length;
+    months.push({ label: m.toLocaleDateString('en-GB', { month: 'short' }), count, current: i === 0 });
+  }
+  const maxCount = Math.max(...months.map(m => m.count), 1);
+  months.forEach(m => {
+    const pct = Math.max((m.count / maxCount) * 100, 4);
+    barHtml += '<div class="bar-col"><div class="bar ' + (m.current ? 'current' : '') + '" style="height:' + pct + '%"></div><div class="bar-label">' + esc(m.label) + '</div></div>';
+  });
+
+  const subjMap = {};
+  history.forEach(h => {
+    if (!subjMap[h.subject]) subjMap[h.subject] = 0;
+    subjMap[h.subject] += Math.round(h.estimate * DIFFICULTY_MULT[h.difficulty]);
+  });
+  const subjEntries = Object.entries(subjMap).sort((a, b) => b[1] - a[1]);
+  const maxSubjTime = subjEntries.length > 0 ? subjEntries[0][1] : 1;
+  let subjHtml = '';
+  subjEntries.forEach(([name, mins]) => {
+    const subj = getSubject(name);
+    const pct = (mins / maxSubjTime) * 100;
+    const timeStr = mins >= 60 ? Math.floor(mins/60) + 'h ' + (mins%60 > 0 ? mins%60 + 'm' : '') : mins + 'm';
+    subjHtml +=
+      '<div class="subj-row">' +
+        '<div class="subj-icon" style="background:' + subj.color + '22">' + esc(subj.emoji) + '</div>' +
+        '<div class="subj-info"><div class="subj-name">' + esc(name) + '</div><div class="subj-bar-track"><div class="subj-bar-fill" style="width:' + pct + '%;background:' + subj.color + '"></div></div></div>' +
+        '<div class="subj-time">' + esc(timeStr) + '</div>' +
+      '</div>';
+  });
+
+  container.innerHTML =
+    '<div class="streak-hero">' +
+      '<div class="streak-emoji">🔥</div>' +
+      '<div class="streak-number">' + streak.current + '</div>' +
+      '<div class="streak-unit">day' + (streak.current !== 1 ? 's' : '') + '</div>' +
+      '<div class="streak-sub">' + esc(streakSub) + '</div>' +
+      (streak.best > 0 ? '<div class="streak-best">🏆 Best: ' + streak.best + ' days</div>' : '') +
+    '</div>' +
+    '<div class="stat-grid">' +
+      '<div class="stat-card"><div class="stat-card-label">Tasks done</div><div class="stat-card-value">' + totalDone + deltaHtml + '</div></div>' +
+      '<div class="stat-card"><div class="stat-card-label">Time put in</div><div class="stat-card-value">' + totalHours + 'h</div></div>' +
+      '<div class="stat-card"><div class="stat-card-label">On time starts</div><div class="stat-card-value">' + onTimePct + '%</div></div>' +
+      '<div class="stat-card"><div class="stat-card-label">This week</div><div class="stat-card-value">' + thisWeekDone + '</div></div>' +
+    '</div>' +
+    '<div class="chart-section"><div class="chart-title">Monthly completions</div><div class="bar-chart">' + barHtml + '</div></div>' +
+    (subjEntries.length > 0 ? '<div class="subject-breakdown"><h3>Subject breakdown</h3>' + subjHtml + '</div>' : '');
+}
+
+function renderSettings() {
+  const container = document.getElementById('settings-content');
+  let subjListHtml = subjects.map((s, i) =>
+    '<div class="subject-item">' +
+      '<span class="subject-emoji">' + esc(s.emoji) + '</span>' +
+      '<span class="subject-item-name">' + esc(s.name) + '</span>' +
+      '<button class="subject-item-btn" onclick="editSubject(' + i + ')"><i class="ti ti-edit"></i></button>' +
+      '<button class="subject-item-btn" onclick="deleteSubject(' + i + ')"><i class="ti ti-trash"></i></button>' +
+    '</div>'
+  ).join('');
+
+  container.innerHTML =
+    '<div class="settings-group"><h3>Subjects</h3><div class="subject-list">' + subjListHtml +
+      '<button class="btn-add-subject" onclick="addSubject()">+ Add subject</button>' +
+    '</div></div>' +
+    '<div class="settings-group"><h3>Data</h3>' +
+      '<div class="setting-row"><span class="setting-label">Clear all data</span>' +
+      '<button class="btn-outline" style="flex:none;padding:8px 16px" onclick="if(confirm(\'Delete all tasks and history?\')){localStorage.clear();location.reload();}">Reset</button></div>' +
+    '</div>';
+}
+
+function addSubject() {
+  editingSubjectIdx = -1;
+  document.getElementById('popover-title').textContent = 'Add subject';
+  document.getElementById('pop-emoji').value = '';
+  document.getElementById('pop-name').value = '';
+  document.getElementById('pop-color').value = '#3f63f2';
+  document.getElementById('subject-popover').classList.add('show');
+}
+function editSubject(i) {
+  editingSubjectIdx = i;
+  const s = subjects[i];
+  document.getElementById('popover-title').textContent = 'Edit subject';
+  document.getElementById('pop-emoji').value = s.emoji;
+  document.getElementById('pop-name').value = s.name;
+  document.getElementById('pop-color').value = s.color;
+  document.getElementById('subject-popover').classList.add('show');
+}
+function closeSubjectPopover() { document.getElementById('subject-popover').classList.remove('show'); }
+function saveSubjectPopover() {
+  const emoji = document.getElementById('pop-emoji').value.trim() || '📚';
+  const name = document.getElementById('pop-name').value.trim();
+  const color = document.getElementById('pop-color').value;
+  if (!name) return;
+  if (editingSubjectIdx >= 0) {
+    const oldName = subjects[editingSubjectIdx].name;
+    subjects[editingSubjectIdx] = { name, emoji, color };
+    if (oldName !== name) tasks.forEach(t => { if (t.subject === oldName) t.subject = name; });
+    saveTasks();
+  } else {
+    subjects.push({ name, emoji, color });
+  }
+  saveSubjects();
+  closeSubjectPopover();
+  renderSettings();
+}
+function deleteSubject(i) {
+  if (!confirm('Delete ' + subjects[i].name + '?')) return;
+  subjects.splice(i, 1);
+  saveSubjects();
+  renderSettings();
+}
+
 function openAddFlow() {
   flowStep = 1;
   flowData = {};
+  showScreen('add');
   document.getElementById('screen-tasks').className = 'screen hidden-left';
   document.getElementById('screen-add').className = 'screen active';
   document.getElementById('fab').classList.add('hide');
@@ -837,117 +1476,89 @@ function goBack() {
 }
 
 function renderFlow() {
-  document.getElementById('step-label').textContent = `Step ${flowStep} of 3`;
-  document.getElementById('sb1').className = `step-bar ${flowStep >= 1 ? 'active' : ''}`;
-  document.getElementById('sb2').className = `step-bar ${flowStep >= 2 ? 'active' : ''}`;
-  document.getElementById('sb3').className = `step-bar ${flowStep >= 3 ? 'active' : ''}`;
+  document.getElementById('step-label').textContent = flowStep <= 3 ? 'Step ' + flowStep + ' of 3' : '';
+  document.getElementById('sb1').className = 'step-bar ' + (flowStep >= 1 ? 'active' : '');
+  document.getElementById('sb2').className = 'step-bar ' + (flowStep >= 2 ? 'active' : '');
+  document.getElementById('sb3').className = 'step-bar ' + (flowStep >= 3 ? 'active' : '');
 
   const fc = document.getElementById('flow-content');
 
   if (flowStep === 1) {
-    fc.innerHTML = `
-      <h2 class="flow-heading">Add homework</h2>
-      <p class="flow-sub">How would you like to add it?</p>
-      <div class="method-cards">
-        <div class="method-card primary" onclick="showModal()">
-          <div class="method-icon"><i class="ti ti-photo-scan"></i></div>
-          <div class="method-info">
-            <div class="method-title-row"><span class="method-title">Upload screenshot</span><span class="fastest-badge">Fastest</span></div>
-            <div class="method-desc">Paste or drag a Satchel One screenshot — Paced reads it for you</div>
-          </div>
-        </div>
-        <div class="method-card" onclick="flowStep=2;renderFlow()">
-          <div class="method-icon"><i class="ti ti-edit"></i></div>
-          <div class="method-info">
-            <div class="method-title-row"><span class="method-title">Add manually</span></div>
-            <div class="method-desc">Type in the details yourself</div>
-          </div>
-        </div>
-      </div>
-    `;
+    fc.innerHTML =
+      '<h2 class="flow-heading">Add homework</h2>' +
+      '<p class="flow-sub">How would you like to add it?</p>' +
+      '<div class="method-cards">' +
+        '<div class="method-card primary" onclick="startUpload()">' +
+          '<div class="method-icon"><i class="ti ti-photo-scan"></i></div>' +
+          '<div class="method-info"><div class="method-title-row"><span class="method-title">Upload screenshot</span><span class="fastest-badge">Fastest</span></div>' +
+          '<div class="method-desc">Paste or drag a Satchel One screenshot — Paced reads it for you</div></div>' +
+        '</div>' +
+        '<div class="method-card" onclick="flowStep=2;renderFlow()">' +
+          '<div class="method-icon"><i class="ti ti-edit"></i></div>' +
+          '<div class="method-info"><div class="method-title-row"><span class="method-title">Add manually</span></div>' +
+          '<div class="method-desc">Type in the details yourself</div></div>' +
+        '</div>' +
+      '</div>';
   } else if (flowStep === 2) {
-    const subjects = Object.keys(SUBJECT_COLORS);
-    fc.innerHTML = `
-      <h2 class="flow-heading">Task details</h2>
-      <p class="flow-sub">Enter the homework information</p>
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <select class="form-select" id="f-subject">
-          <option value="">Select subject</option>
-          ${subjects.map(s => `<option value="${s}" ${flowData.subject === s ? 'selected' : ''}>${s}</option>`).join('')}
-          <option value="__custom">Other…</option>
-        </select>
-      </div>
-      <div class="form-group" id="custom-subject-group" style="display:none">
-        <label class="form-label">Custom subject</label>
-        <input class="form-input" id="f-custom-subject" placeholder="e.g. Drama" value="${flowData.customSubject || ''}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Task name</label>
-        <input class="form-input" id="f-title" placeholder="e.g. Essay on photosynthesis" value="${flowData.title || ''}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Due date</label>
-        <input class="form-input" id="f-due" type="date" value="${flowData.dueDate || ''}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Teacher's time estimate</label>
-        <select class="form-select" id="f-estimate">
-          <option value="">Select estimate</option>
-          ${TIME_OPTIONS.map(o => `<option value="${o.val}" ${flowData.estimate == o.val ? 'selected' : ''}>${o.label}</option>`).join('')}
-        </select>
-      </div>
-      <button class="btn-primary" onclick="submitStep2()">Continue</button>
-    `;
-    document.getElementById('f-subject').addEventListener('change', function() {
-      document.getElementById('custom-subject-group').style.display = this.value === '__custom' ? 'block' : 'none';
-    });
-    if (flowData.subject === '__custom') document.getElementById('custom-subject-group').style.display = 'block';
+    fc.innerHTML =
+      '<h2 class="flow-heading">Task details</h2>' +
+      '<p class="flow-sub">Enter the homework information</p>' +
+      '<div class="form-group"><label class="form-label">Subject</label>' +
+        '<select class="form-select" id="f-subject"><option value="">Select subject</option>' +
+        subjects.map(s => '<option value="' + esc(s.name) + '" ' + (flowData.subject === s.name ? 'selected' : '') + '>' + esc(s.emoji) + ' ' + esc(s.name) + '</option>').join('') +
+        '</select></div>' +
+      '<div class="form-group"><label class="form-label">Task name</label>' +
+        '<input class="form-input" id="f-title" placeholder="e.g. Essay on photosynthesis" value="' + esc(flowData.title || '') + '"></div>' +
+      '<div class="form-group"><label class="form-label">Description (optional)</label>' +
+        '<textarea class="form-input form-textarea" id="f-desc" placeholder="Any extra details...">' + esc(flowData.desc || '') + '</textarea></div>' +
+      '<div class="form-group"><label class="form-label">Due date</label>' +
+        '<input class="form-input" id="f-due" type="date" value="' + (flowData.dueDate || '') + '"></div>' +
+      '<div class="form-group"><label class="form-label">Teacher\'s time estimate</label>' +
+        '<select class="form-select" id="f-estimate"><option value="">Select estimate</option>' +
+        TIME_OPTIONS.map(o => '<option value="' + o.val + '" ' + (flowData.estimate == o.val ? 'selected' : '') + '>' + o.label + '</option>').join('') +
+        '</select></div>' +
+      '<button class="btn-primary" onclick="submitStep2()">Continue</button>';
   } else if (flowStep === 3) {
-    const subj = flowData.subject === '__custom' ? flowData.customSubject : flowData.subject;
     const estLabel = TIME_OPTIONS.find(o => o.val == flowData.estimate)?.label || flowData.estimate + ' min';
-    fc.innerHTML = `
-      <h2 class="flow-heading">Confirm & rate</h2>
-      <p class="flow-sub">How hard is this for you?</p>
-      <div class="confirm-card">
-        <div class="confirm-row"><span class="confirm-key">Subject</span><span class="confirm-val">${subj}</span></div>
-        <div class="confirm-row"><span class="confirm-key">Task</span><span class="confirm-val">${flowData.title}</span></div>
-        <div class="confirm-row"><span class="confirm-key">Due</span><span class="confirm-val">${formatDate(flowData.dueDate)}</span></div>
-        <div class="confirm-row"><span class="confirm-key">Estimate</span><span class="confirm-val">${estLabel}</span></div>
-      </div>
-      <div class="diff-selector">
-        ${DIFFICULTY_LABELS.map((l, i) => `<button class="diff-btn ${flowData.difficulty === i ? 'active' : ''}" onclick="selectDifficulty(${i})">${l}</button>`).join('')}
-      </div>
-      <div id="schedule-preview"></div>
-      <button class="btn-primary" id="btn-add" onclick="addTask()" ${flowData.difficulty === undefined ? 'disabled' : ''}>Add to Paced →</button>
-    `;
+    fc.innerHTML =
+      '<h2 class="flow-heading">Confirm & rate</h2>' +
+      '<p class="flow-sub">How hard is this for you?</p>' +
+      '<div class="confirm-card">' +
+        '<div class="confirm-row"><span class="confirm-key">Subject</span><span class="confirm-val">' + esc(flowData.subject) + '</span></div>' +
+        '<div class="confirm-row"><span class="confirm-key">Task</span><span class="confirm-val">' + esc(flowData.title) + '</span></div>' +
+        '<div class="confirm-row"><span class="confirm-key">Due</span><span class="confirm-val">' + esc(formatDate(flowData.dueDate)) + '</span></div>' +
+        '<div class="confirm-row"><span class="confirm-key">Estimate</span><span class="confirm-val">' + esc(estLabel) + '</span></div>' +
+      '</div>' +
+      '<div class="diff-selector">' +
+        DIFFICULTY_LABELS.map((l, i) => '<button class="diff-btn ' + (flowData.difficulty === i ? 'active' : '') + '" onclick="selectDifficulty(' + i + ')">' + esc(l) + '</button>').join('') +
+      '</div>' +
+      '<div id="schedule-preview"></div>' +
+      '<button class="btn-primary" id="btn-add" onclick="addTask()" ' + (flowData.difficulty === undefined ? 'disabled' : '') + '>Add to Paced →</button>';
     if (flowData.difficulty !== undefined) renderSchedulePreview();
   } else if (flowStep === 4) {
-    const subj = flowData.subject === '__custom' ? flowData.customSubject : flowData.subject;
     const sched = calcSchedule(flowData.estimate, flowData.difficulty, flowData.dueDate);
-    fc.innerHTML = `
-      <div class="success-screen">
-        <div class="success-check"><i class="ti ti-check"></i></div>
-        <h2 class="success-title">Added to Paced</h2>
-        <p class="success-sub">First session: ${sched.startDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' })}</p>
-        <button class="btn-primary" style="max-width:260px" onclick="showScreen('tasks');renderSummary();renderTasks()">Back to tasks</button>
-      </div>
-    `;
-    document.getElementById('step-label').textContent = '';
+    fc.innerHTML =
+      '<div class="success-screen">' +
+        '<div class="success-check"><i class="ti ti-check"></i></div>' +
+        '<h2 class="success-title">Added to Paced</h2>' +
+        '<p class="success-sub">Start by ' + sched.startDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' }) + '</p>' +
+        '<button class="btn-primary" style="max-width:260px" onclick="showScreen(\'tasks\');renderSummary();renderTasks()">Back to tasks</button>' +
+      '</div>';
   }
 }
 
 function submitStep2() {
   const subj = document.getElementById('f-subject').value;
   const title = document.getElementById('f-title').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
   const due = document.getElementById('f-due').value;
   const est = document.getElementById('f-estimate').value;
   if (!subj || !title || !due || !est) return;
   flowData.subject = subj;
   flowData.title = title;
+  flowData.desc = desc;
   flowData.dueDate = due;
   flowData.estimate = parseInt(est);
-  if (subj === '__custom') flowData.customSubject = document.getElementById('f-custom-subject').value.trim();
   flowStep = 3;
   renderFlow();
 }
@@ -961,27 +1572,25 @@ function selectDifficulty(i) {
 
 function renderSchedulePreview() {
   const sched = calcSchedule(flowData.estimate, flowData.difficulty, flowData.dueDate);
-  document.getElementById('schedule-preview').innerHTML = `
-    <div class="schedule-preview">
-      <div class="schedule-title">Paced schedule</div>
-      <div class="schedule-row"><span class="label">Total time</span><span>${sched.totalMinutes} min</span></div>
-      <div class="schedule-row"><span class="label">Sessions (25 min each)</span><span>${sched.sessions}</span></div>
-      <div class="schedule-row"><span class="label">Start by</span><span>${sched.startDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span></div>
-    </div>
-  `;
+  document.getElementById('schedule-preview').innerHTML =
+    '<div class="schedule-preview">' +
+      '<div class="schedule-title">Paced schedule</div>' +
+      '<div class="schedule-row"><span class="label">Total time</span><span>' + formatTime(sched.totalMinutes) + '</span></div>' +
+      '<div class="schedule-row"><span class="label">Start by</span><span>' + sched.startDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + '</span></div>' +
+    '</div>';
 }
 
 function addTask() {
-  const subj = flowData.subject === '__custom' ? flowData.customSubject : flowData.subject;
   tasks.unshift({
     id: Date.now().toString(),
-    subject: subj,
+    subject: flowData.subject,
     title: flowData.title,
-    desc: '',
+    desc: flowData.desc || '',
     dueDate: flowData.dueDate,
     estimate: flowData.estimate,
     difficulty: flowData.difficulty,
-    sessionsComplete: 0,
+    started: false,
+    done: false,
     createdDate: new Date().toISOString().split('T')[0],
   });
   saveTasks();
@@ -989,14 +1598,77 @@ function addTask() {
   renderFlow();
 }
 
-function showModal() { document.getElementById('modal').classList.add('show'); }
+function startUpload() {
+  document.getElementById('file-input').click();
+}
+
+document.getElementById('file-input').addEventListener('change', async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+
+  const reader = new FileReader();
+  reader.onload = async function(ev) {
+    const base64 = ev.target.result.split(',')[1];
+    const mediaType = file.type || 'image/png';
+
+    flowStep = 2;
+    const fc = document.getElementById('flow-content');
+    fc.innerHTML = '<div class="upload-status"><i class="ti ti-loader" style="animation:spin 1s linear infinite;display:inline-block"></i> Reading screenshot with Claude...</div>';
+
+    if (!document.getElementById('spin-style')) {
+      const style = document.createElement('style');
+      style.id = 'spin-style';
+      style.textContent = '@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+      document.head.appendChild(style);
+    }
+
+    try {
+      const resp = await fetch('/api/parse-screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64, mediaType })
+      });
+      if (!resp.ok) throw new Error('API error: ' + resp.status);
+      const data = await resp.json();
+      const text = data.content[0].text;
+      const match = text.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Could not parse response');
+      const parsed = JSON.parse(match[0]);
+
+      flowData.subject = parsed.subject || '';
+      flowData.title = parsed.title || '';
+      flowData.desc = parsed.desc || '';
+      flowData.dueDate = parsed.dueDate || '';
+      flowData.estimate = parsed.estimate || 60;
+
+      const matchingSubj = subjects.find(s => s.name.toLowerCase() === (flowData.subject || '').toLowerCase());
+      if (matchingSubj) flowData.subject = matchingSubj.name;
+
+      renderFlow();
+    } catch (err) {
+      showModalMsg('Upload failed', err.message);
+      flowStep = 1;
+      renderFlow();
+    }
+  };
+  reader.readAsDataURL(file);
+});
+
+function showModalMsg(title, msg) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-msg').textContent = msg;
+  document.getElementById('modal').classList.add('show');
+}
 function closeModal() { document.getElementById('modal').classList.remove('show'); }
 
-// Init
 function init() {
   const now = new Date();
   document.getElementById('today-date').textContent = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  loadSubjects();
   loadTasks();
+  loadHistory();
+  loadStreak();
   renderSummary();
   renderTasks();
 }

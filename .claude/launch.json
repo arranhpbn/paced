@@ -4,7 +4,7 @@
     {
       "name": "paced",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3456", "--directory", "/Users/arranhepburn/paced"],
+      "runtimeArgs": ["-m", "http.server", "3456", "-d", "/Users/arranhepburn/paced"],
       "port": 3456
     }
   ]
