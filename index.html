@@ -6,6 +6,7 @@
 <title>Paced</title>
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=satoshi@400,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -702,11 +703,56 @@ input, select, textarea { font-family: inherit; }
 }
 
 .screen::-webkit-scrollbar { width: 0; }
+
+.auth-screen {
+  position: fixed; inset: 0; z-index: 300;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.auth-screen.hidden { display: none; }
+.auth-box {
+  width: 100%; max-width: 360px;
+  text-align: center;
+}
+.auth-box .logo-icon { width: 48px; height: 48px; font-size: 26px; margin: 0 auto 12px; border-radius: 12px; }
+.auth-box .wordmark { font-size: 28px; margin-bottom: 8px; display: block; }
+.auth-box .auth-sub { font-size: 14px; color: var(--ink2); margin-bottom: 28px; }
+.auth-box .form-group { text-align: left; }
+.auth-error {
+  font-size: 13px; color: var(--red); margin-bottom: 12px;
+  min-height: 18px;
+}
+.auth-toggle { font-size: 13px; color: var(--ink2); margin-top: 16px; }
+.auth-toggle a { color: var(--blue-primary); cursor: pointer; text-decoration: none; }
+.auth-toggle a:hover { text-decoration: underline; }
+.auth-guest { font-size: 13px; color: var(--ink3); margin-top: 20px; cursor: pointer; }
+.auth-guest:hover { color: var(--ink2); }
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-box">
+    <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
+    <span class="wordmark">paced</span>
+    <p class="auth-sub">Sign in to sync your homework across devices</p>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="auth-email" type="email" placeholder="you@school.ac.uk">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="auth-password" type="password" placeholder="••••••••">
+    </div>
+    <div class="auth-error" id="auth-error"></div>
+    <button class="btn-primary" id="auth-submit" onclick="handleAuth()">Sign in</button>
+    <div class="auth-toggle" id="auth-toggle">Don't have an account? <a onclick="toggleAuthMode()">Sign up</a></div>
+    <div class="auth-guest" onclick="continueAsGuest()">Continue without an account</div>
+  </div>
+</div>
+
+<div class="app" id="app-container" style="display:none">
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="logo-icon"><i class="ti ti-clock-bolt"></i></div>
@@ -838,6 +884,75 @@ input, select, textarea { font-family: inherit; }
 <script>
 const esc = (s) => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
 
+const sb = window.supabase.createClient(
+  'https://qtmytztfkijhnibqhqwk.supabase.co',
+  'sb_publishable_kFqZdZ0kyK7JxR_AZ7osKg_zv4gXWAE'
+);
+let currentUser = null;
+let authMode = 'signin';
+let isGuest = false;
+
+function toggleAuthMode() {
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  document.getElementById('auth-submit').textContent = authMode === 'signin' ? 'Sign in' : 'Sign up';
+  document.getElementById('auth-toggle').innerHTML = authMode === 'signin'
+    ? 'Don\'t have an account? <a onclick="toggleAuthMode()">Sign up</a>'
+    : 'Already have an account? <a onclick="toggleAuthMode()">Sign in</a>';
+  document.getElementById('auth-error').textContent = '';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = 'Please enter email and password.'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+
+  document.getElementById('auth-submit').disabled = true;
+  let result;
+  if (authMode === 'signup') {
+    result = await sb.auth.signUp({ email, password });
+  } else {
+    result = await sb.auth.signInWithPassword({ email, password });
+  }
+  document.getElementById('auth-submit').disabled = false;
+
+  if (result.error) {
+    errEl.textContent = result.error.message;
+    return;
+  }
+  if (authMode === 'signup' && result.data?.user && !result.data.session) {
+    errEl.textContent = '';
+    errEl.style.color = 'var(--green)';
+    errEl.textContent = 'Check your email to confirm your account.';
+    return;
+  }
+}
+
+function continueAsGuest() {
+  isGuest = true;
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app-container').style.display = '';
+  init();
+}
+
+async function enterApp(user) {
+  currentUser = user;
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app-container').style.display = '';
+  await init();
+}
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user && !isGuest) {
+    await enterApp(session.user);
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    location.reload();
+  }
+});
+
 const DEFAULT_SUBJECTS = [
   { name: 'Sports Science', emoji: '🏃', color: '#3f63f2' },
   { name: 'Mathematics', emoji: '📐', color: '#A78BFA' },
@@ -872,16 +987,27 @@ let calWeekOffset = 0;
 let previousOpen = false;
 let editingSubjectIdx = -1;
 
-function loadSubjects() {
+async function loadSubjects() {
+  if (currentUser) {
+    const { data } = await sb.from('user_subjects').select('subjects').eq('user_id', currentUser.id).single();
+    if (data) { subjects = data.subjects; localStorage.setItem('paced_subjects', JSON.stringify(subjects)); return; }
+  }
   const saved = localStorage.getItem('paced_subjects');
   if (saved) { subjects = JSON.parse(saved); return; }
   subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
-  saveSubjects();
+  await saveSubjects();
 }
-function saveSubjects() { localStorage.setItem('paced_subjects', JSON.stringify(subjects)); }
+async function saveSubjects() {
+  localStorage.setItem('paced_subjects', JSON.stringify(subjects));
+  if (currentUser) await sb.from('user_subjects').upsert({ user_id: currentUser.id, subjects }, { onConflict: 'user_id' });
+}
 function getSubject(name) { return subjects.find(s => s.name === name) || { name, emoji: '📚', color: '#3f63f2' }; }
 
-function loadTasks() {
+async function loadTasks() {
+  if (currentUser) {
+    const { data } = await sb.from('user_tasks').select('tasks').eq('user_id', currentUser.id).single();
+    if (data) { tasks = data.tasks; localStorage.setItem('paced_tasks', JSON.stringify(tasks)); return; }
+  }
   const saved = localStorage.getItem('paced_tasks');
   if (saved) {
     tasks = JSON.parse(saved);
@@ -893,7 +1019,8 @@ function loadTasks() {
       if (t.done === undefined) { t.done = false; migrated = true; }
       if (t.overdueChecked === undefined) { t.overdueChecked = false; migrated = true; }
     });
-    if (migrated) saveTasks();
+    if (migrated) await saveTasks();
+    if (currentUser) await saveTasks();
     return;
   }
   const today = new Date();
@@ -908,22 +1035,40 @@ function loadTasks() {
     { id:'7', subject:'Biology', title:'Cell division diagram labels', desc:'Label all stages of mitosis and meiosis on the provided diagrams.', dueDate: d(10), estimate:30, difficulty:0, started:false, done:false, overdueChecked:false, createdDate: d(0) },
     { id:'8', subject:'Geography', title:'River Tees case study notes', desc:'Summarise the upper, middle and lower course features.', dueDate: d(-3), estimate:60, difficulty:1, started:true, done:true, overdueChecked:false, createdDate: d(-8) },
   ];
-  saveTasks();
+  await saveTasks();
 }
-function saveTasks() { localStorage.setItem('paced_tasks', JSON.stringify(tasks)); }
+async function saveTasks() {
+  localStorage.setItem('paced_tasks', JSON.stringify(tasks));
+  if (currentUser) await sb.from('user_tasks').upsert({ user_id: currentUser.id, tasks }, { onConflict: 'user_id' });
+}
 
-function loadHistory() {
+async function loadHistory() {
+  if (currentUser) {
+    const { data } = await sb.from('user_history').select('history').eq('user_id', currentUser.id).single();
+    if (data) { history = data.history; localStorage.setItem('paced_history', JSON.stringify(history)); return; }
+  }
   const saved = localStorage.getItem('paced_history');
   history = saved ? JSON.parse(saved) : [];
+  if (currentUser && history.length) await saveHistory();
 }
-function saveHistory() { localStorage.setItem('paced_history', JSON.stringify(history)); }
+async function saveHistory() {
+  localStorage.setItem('paced_history', JSON.stringify(history));
+  if (currentUser) await sb.from('user_history').upsert({ user_id: currentUser.id, history }, { onConflict: 'user_id' });
+}
 
-function loadStreak() {
+async function loadStreak() {
+  if (currentUser) {
+    const { data } = await sb.from('user_streak').select('streak').eq('user_id', currentUser.id).single();
+    if (data) { streak = data.streak; localStorage.setItem('paced_streak', JSON.stringify(streak)); return; }
+  }
   const saved = localStorage.getItem('paced_streak');
-  if (saved) { streak = JSON.parse(saved); return; }
+  if (saved) { streak = JSON.parse(saved); if (currentUser) await saveStreak(); return; }
   streak = { current: 0, best: 0, lastDate: null };
 }
-function saveStreak() { localStorage.setItem('paced_streak', JSON.stringify(streak)); }
+async function saveStreak() {
+  localStorage.setItem('paced_streak', JSON.stringify(streak));
+  if (currentUser) await sb.from('user_streak').upsert({ user_id: currentUser.id, streak }, { onConflict: 'user_id' });
+}
 
 function updateStreak() {
   const todayStr = new Date().toISOString().split('T')[0];
@@ -1408,7 +1553,24 @@ function renderSettings() {
     '</div>'
   ).join('');
 
+  let accountHtml;
+  if (currentUser) {
+    accountHtml =
+      '<div class="settings-group"><h3>Account</h3>' +
+        '<div class="setting-row"><span class="setting-label">' + esc(currentUser.email) + '</span>' +
+        '<button class="btn-outline" style="flex:none;padding:8px 16px" onclick="signOut()">Sign out</button></div>' +
+        '<div style="font-size:12px;color:var(--ink3);margin-top:8px">Your data syncs to the cloud automatically.</div>' +
+      '</div>';
+  } else {
+    accountHtml =
+      '<div class="settings-group"><h3>Account</h3>' +
+        '<div class="setting-row"><span class="setting-label" style="color:var(--ink2)">Not signed in — data is local only</span>' +
+        '<button class="btn-outline" style="flex:none;padding:8px 16px" onclick="isGuest=false;document.getElementById(\'auth-screen\').classList.remove(\'hidden\');document.getElementById(\'app-container\').style.display=\'none\'">Sign in</button></div>' +
+      '</div>';
+  }
+
   container.innerHTML =
+    accountHtml +
     '<div class="settings-group"><h3>Subjects</h3><div class="subject-list">' + subjListHtml +
       '<button class="btn-add-subject" onclick="addSubject()">+ Add subject</button>' +
     '</div></div>' +
@@ -1662,18 +1824,27 @@ function showModalMsg(title, msg) {
 }
 function closeModal() { document.getElementById('modal').classList.remove('show'); }
 
-function init() {
+async function init() {
   const now = new Date();
   document.getElementById('today-date').textContent = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  loadSubjects();
-  loadTasks();
-  loadHistory();
-  loadStreak();
+  await loadSubjects();
+  await loadTasks();
+  await loadHistory();
+  await loadStreak();
   renderSummary();
   renderTasks();
 }
 
-init();
+async function signOut() {
+  await sb.auth.signOut();
+}
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    await enterApp(session.user);
+  }
+})();
 </script>
 </body>
 </html>
